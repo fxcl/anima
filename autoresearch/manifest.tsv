@@ -1,0 +1,122 @@
+# status	bucket	java_anchor(file:token)	go_symbols(comma-sep; src: = grep Go source)	note
+# status: covered | partial | gap | excluded
+# gap 行列出「若落地则会出现」的 go doc 令牌；一旦出现即 STALE-GAP（清单过时，需升级状态）。
+A01	covered	Anima.java:public static Anima me()	func Of()	单例访问
+A02	covered	Anima.java:public static Anima open(String url)	func Open(	DSN 直连
+A03	covered	Anima.java:open(String url, String user, String pass)	func OpenWith(	凭证式 open
+A04	covered	Anima.java:public static Anima open(DataSource dataSource)	func OpenDB(	*sql.DB 注入
+A05	covered	Anima.java:open(String url, Quirks quirks)	func OpenWith(	Quirks→Dialect 适配
+A06	covered	Anima.java:open(DataSource dataSource, Quirks quirks)	func OpenDB(	Quirks→Dialect 适配
+A07	covered	Anima.java:public static Atomic atomic(	func Atomic(	Runnable→func(ctx) error
+A08	covered	Anima.java:public Anima rollbackException(	func (a *Anima) RollbackWhen(	Class→谓词函数
+A09	covered	Anima.java:public Anima tablePrefix(String tablePrefix)	func (a *Anima) TablePrefix(	setter
+A10	covered	Anima.java:public String tablePrefix()	(a *Anima) GetTablePrefix() string	getter（Go 无重载，GetXxx 避让 setter 同名）
+A11	covered	Anima.java:public Anima dialect(Dialect dialect)	func (a *Anima) Dialect(	setter
+A12	covered	Anima.java:public Dialect dialect()	(a *Anima) GetDialect() dialect.Dialect	getter
+A13	covered	Anima.java:public Anima enableSQLStatistic(	func (a *Anima) EnableSQLStatistic(	setter
+A14	covered	Anima.java:public boolean isEnableSQLStatistic()	(a *Anima) IsEnableSQLStatistic() bool	getter
+A15	covered	Anima.java:public Anima useSQLLimit(	func (a *Anima) UseSQLLimit(	setter
+A16	covered	Anima.java:public boolean isUseSQLLimit()	(a *Anima) IsUseSQLLimit() bool	getter
+A17	covered	Anima.java:public Anima addConverter(	func AddConverter,func (a *Anima) AddConverter(	自由函数+方法双形态
+A18	covered	Anima.java:public static Select select()	func Select[	泛型替代 Class 参数
+A19	covered	Anima.java:public static Select select(String columns)	func (q *Query[T]) Cols(	select(cols)→Cols()
+A20	covered	Anima.java:public static Update update()	func UpdateFrom[
+A21	covered	Anima.java:public static Delete delete()	func DeleteFrom[
+A22	covered	Anima.java:public static <T extends Model> ResultKey save(	func Save[
+A23	covered	Anima.java:public static <T extends Model> void saveBatch(	func SaveBatch[
+A24	covered	Anima.java:deleteBatch(Class<T> model, S... ids)	func DeleteBatch[	两种重载合一
+A25	covered	Anima.java:public static <T extends Model> int deleteById(	func DeleteById[
+A26	covered	Anima.java:public static int execute(	func Execute(
+B01	covered	core/AnimaQuery.java:public AnimaQuery<T> where(String statement)	func (q *Query[T]) Where(	6 种重载→Where(sqlFrag,args...)
+B02	covered	core/AnimaQuery.java:public AnimaQuery<T> where(T model)	func (q *Query[T]) WhereModel(	nil/空串跳过已锁定
+B03	covered	core/AnimaQuery.java:public AnimaQuery<T> and(String statement	func (q *Query[T]) And(
+B04	covered	core/AnimaQuery.java:public AnimaQuery<T> or(String statement	func (q *Query[T]) Or(	括号化对齐已锁定
+B05	covered	core/AnimaQuery.java:public AnimaQuery<T> eq(Object value)	func (c *Cond[T]) Eq(	where(fn)→WhereCol+Eq
+B06	covered	core/AnimaQuery.java:public AnimaQuery<T> notEq(	func (c *Cond[T]) Ne(
+B07	covered	core/AnimaQuery.java:public AnimaQuery<T> notEmpty(	(c *Cond[T]) NotEmpty(	Java 形状为 " != ''"（where(col) 后续式与列名式均覆盖）
+B08	covered	core/AnimaQuery.java:public AnimaQuery<T> notNull(	func (c *Cond[T]) NotNull,func (c *Cond[T]) IsNull(	含 isNull 对偶
+B09	covered	core/AnimaQuery.java:public AnimaQuery<T> like(	func (c *Cond[T]) Like(
+B10	covered	core/AnimaQuery.java:public AnimaQuery<T> between(	func (c *Cond[T]) Between(	小写 BETWEEN 形状已锁定
+B11	covered	core/AnimaQuery.java:public AnimaQuery<T> gt(	func (c *Cond[T]) Gt(
+B12	covered	core/AnimaQuery.java:public AnimaQuery<T> gte(	func (c *Cond[T]) Ge(
+B13	covered	core/AnimaQuery.java:public AnimaQuery<T> lt(	func (c *Cond[T]) Lt(
+B14	covered	core/AnimaQuery.java:public AnimaQuery<T> lte(	func (c *Cond[T]) Le(
+B15	covered	core/AnimaQuery.java:public AnimaQuery<T> in(String column	func (c *Cond[T]) In(	空参跳条件已锁定
+B16	covered	core/AnimaQuery.java:public AnimaQuery<T> order(String order)	func (q *Query[T]) Order(	逗号累积已锁定
+B17	covered	core/AnimaQuery.java:order(String columnName, OrderBy orderBy)	func (q *Query[T]) OrderCol(	OrderBy 枚举→字符串
+B18	covered	core/AnimaQuery.java:public AnimaQuery<T> select(String columns)	func (q *Query[T]) Cols(
+B19	covered	core/AnimaQuery.java:public AnimaQuery<T> exclude(	func (q *Query[T]) Exclude(	排除全部回退 * 已锁定
+B21	covered	core/AnimaQuery.java:public AnimaQuery<T> set(String column	func (q *Query[T]) Set(	同列覆盖 LinkedHash 语义已锁定
+B22	covered	core/AnimaQuery.java:public AnimaQuery<T> join(JoinParam joinParam)	func (q *Query[T]) Join(	N+1 回填为双方共同行为
+C01	covered	core/AnimaQuery.java:public T byId(Object id)	func (q *Query[T]) ById(	无 ORDER BY 已锁定
+C02	covered	core/AnimaQuery.java:public List<T> byIds(	func (q *Query[T]) ByIds(	空参全表 quirk 已锁定
+C03	covered	core/AnimaQuery.java:public T one()	func (q *Query[T]) One(
+C04	covered	core/AnimaQuery.java:public List<T> all()	func (q *Query[T]) All(
+C05	covered	core/AnimaQuery.java:public List<Map<String, Object>> maps()	func (q *Query[T]) Maps(
+C06	covered	core/AnimaQuery.java:public long count()	func (q *Query[T]) Count(
+C07	covered	core/AnimaQuery.java:public Page<T> page(int page, int limit)	func (q *Query[T]) Page(	count 去 ORDER BY 已锁定
+C08	covered	core/AnimaQuery.java:page(String sql, Object[] params, PageRow pageRow)	func (q *Query[T]) BySQL,func (q *Query[T]) Page(	自定义 SQL 分页
+C09	covered	core/AnimaQuery.java:public List<T> limit(int limit)	func (q *Query[T]) Limit(	Limit+All 终端
+C10	covered	core/AnimaQuery.java:public Stream<T> stream()	src:func (q *Query[T]) Seq	stream() 对齐为 Seq（eager All 后 iter.Seq 迭代，错误在调用时返回）；parallel() 为 Java Stream 运行时机制（ForkJoin），Go 无惯用对应；map/filter 已由 Map/Filter 关闭
+C11	covered	core/AnimaQuery.java:public <R> Stream<R> map(	func Map[	Java 惰性 Stream→Go 立即求值；自由函数（Go 方法不能带新类型参数）
+C12	covered	core/AnimaQuery.java:public Stream<T> filter(	(q *Query[T]) Filter(	后置谓词：SQL 全量执行后内存过滤
+C13	covered	core/AnimaQuery.java:public <S> S queryOne(	func ScalarSQL[,func (q *Query[T]) BySQL	标量/实体两形态
+C14	covered	core/AnimaQuery.java:public <S> List<S> queryList(	func QuerySQL[
+C15	covered	core/AnimaQuery.java:public List<Map<String, Object>> queryListMap(	func (q *Query[T]) Maps(
+C16	covered	core/AnimaQuery.java:public int execute()	func (q *Query[T]) Execute(
+C17	covered	core/AnimaQuery.java:public <S extends Model> ResultKey save(S model)	func Save[
+C18	covered	core/AnimaQuery.java:public int delete()	func DeleteFrom[,func DeleteById[,func Delete[	delete/deleteById/deleteByModel
+C19	covered	core/AnimaQuery.java:public int update()	func UpdateFrom[,func (q *Query[T]) UpdateById(,func Update[	update/updateById/updateByModel
+C20	covered	core/AnimaQuery.java:public AnimaQuery<T> useSQL()	func (q *Query[T]) BySQL(
+C21	covered	core/AnimaQuery.java:public static void commit()	func (a *Anima) Begin,func (a *Anima) Commit,func (a *Anima) Rollback	ThreadLocal→ctx 适配
+C22	covered	core/AnimaQuery.java:public static void rollback()	func (a *Anima) Rollback(	同上
+C23	excluded	core/AnimaQuery.java:public AnimaQuery<T> bindSQL2o(	-	sql2o 基础设施，Go 无对应概念，不计分
+D01	covered	Model.java:public ResultKey save()	func Save[	ActiveRecord→泛型自由函数
+D02	covered	Model.java:public int update()	func Update[
+D03	covered	Model.java:public int updateById(Serializable id)	func (q *Query[T]) UpdateById(
+D04	covered	Model.java:public int delete()	func Delete[
+D05	covered	Model.java:public AnimaQuery<? extends Model> set(	func (q *Query[T]) Set(	UpdateFrom().Set() 链
+D06	covered	Model.java:public AnimaQuery<? extends Model> where(	func (q *Query[T]) Where(
+E01	covered	core/Atomic.java:public static Atomic ok()	func AtomicOK(	结果工厂
+E02	covered	core/Atomic.java:public static Atomic error(	func AtomicError(	结果工厂，error 替代 Exception
+E03	covered	core/Atomic.java:public Atomic rollback(boolean	(r *AtomicResult) Rollback(	链式标记
+E04	covered	core/Atomic.java:public boolean isRollback()	func (r *AtomicResult) IsRollback()
+E05	covered	core/Atomic.java:public Atomic catchException(	func (r *AtomicResult) CatchException(
+E06	covered	core/Atomic.java:public <R> R catchAndReturn(	func CatchAndReturn[
+F01	covered	core/ResultKey.java:public Integer asInt()	func (r *ResultKey) AsInt()
+F02	covered	core/ResultKey.java:public Long asLong()	func (r *ResultKey) AsLong()
+F03	covered	core/ResultKey.java:public BigInteger asBigInteger()	(r *ResultKey) AsBigInteger()	int64→big.Int 转换为 database/sql 下的语义等价
+F04	covered	core/ResultKey.java:public String asString()	func (r *ResultKey) AsString()
+G01	covered	core/ResultList.java:public T one()	func (q *Query[T]) BySQL	BySQL+One
+G02	covered	core/ResultList.java:public List<T> all()	func (q *Query[T]) BySQL	BySQL+All
+G03	covered	core/ResultList.java:public List<Map<String, Object>> maps()	func (q *Query[T]) Maps(
+G04	covered	core/ResultList.java:public <S extends Model> Page<S> page(	func (q *Query[T]) Page(	BySQL+Page（count 包裹 CustomSQL）
+H01	covered	core/Joins.java:public static JoinParam with(	func JoinWith[
+H02	covered	core/JoinParam.java:public <T, R> JoinParam as(	func (s *JoinSpec) As(
+H03	covered	core/JoinParam.java:public <T, S extends Model, R> JoinParam on(	func (s *JoinSpec) On(
+H04	covered	core/JoinParam.java:public JoinParam order(	func (s *JoinSpec) Order(	表达式字符串覆盖枚举形态
+I01	covered	page/Page.java:public <R> Page<R> map(	func MapPage[
+I02	covered	page/Page.java:public Page<T> peek(	func (p *Page[T]) Peek(
+I03	covered	page/Page.java:public Page<T> navPages(	func (p *Page[T]) RecalcNavPages(
+I04	covered	page/Page.java:public Page(long total	int64,func NewPage[	构造器
+I05	covered	page/Page.java:lombok.Data	TotalRows,NavPageNums,IsFirstPage	Java getter→Go 导出字段
+J01	covered	annotation/Table.java:@interface Table	src:TableNameProvider	表名覆盖接口
+J02	covered	annotation/Column.java:@interface Column	src:column:	struct tag
+J03	covered	annotation/Ignore.java:@interface Ignore	src:anima:"-"
+J04	covered	annotation/EnumMapping.java:@interface EnumMapping	src:DBEnum,src:DBEnumScanner
+K01	covered	dialect/Dialect.java:public interface Dialect	dialect.Dialect
+K02	covered	dialect/MySQLDialect.java:class MySQLDialect	type MySQL
+K03	covered	dialect/SQLiteDialect.java:class SQLiteDialect	type SQLite
+K04	covered	dialect/PostgreSQLDialect.java:class PostgreSQLDialect	type PostgreSQL
+K05	covered	dialect/OracleDialect.java:class OracleDialect	type Oracle
+K06	covered	dialect/DB2Dialect.java:class DB2Dialect	type DB2
+K07	covered	dialect/SqlServerDialect.java:class SqlServerDialect	type SqlServer
+K08	covered	dialect/SqlServer2012Dialect.java:class SqlServer2012Dialect	type SqlServer2012
+L01	covered	enums/ErrorCode.java:SQL2O_IS_NULL	ErrorCodeSql2oNotInit,ErrorCodeEmptyFromClause	Go 为超集(1000-1006)
+L02	covered	enums/OrderBy.java:public enum OrderBy	OrderCol,src:desc	枚举→方向字符串
+L03	excluded	DMLType.java:public enum DMLType	-	内部 qMode，不计分
+L04	excluded	SupportedType.java:public enum SupportedType	-	内部类型判定，不计分
+M01	covered	utils/English.java:public static String plural(	src:func English(,src:func (f *inflector) Plural,src:func (f *inflector) PluralCount	English(mode) 工厂 + Plural/PluralCount 已导出（go doc 不显示未导出类型的导出方法，covered 令牌走 src: 通道）
+M02	covered	utils/English.java:public English(MODE	func English(mode EnglishMode,src:func (f *inflector) Plural(	EnglishMode 双模式 + 导出 Plural 方法
+M03	covered	utils/AnimaUtils.java:public static String toUnderline(	func ToUnderline(	func ToCamelName(	导出封装，行为与 Java 一致(小驼峰)
+M04	covered	core/functions/TypeFunction.java:public interface TypeFunction	WhereCol,Set	方法引用→字符串字段名（文档化适配）

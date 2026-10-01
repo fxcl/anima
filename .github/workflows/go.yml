@@ -1,0 +1,33 @@
+name: Go
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Vet
+        run: go vet ./...
+
+      - name: Build
+        run: go build -v ./...
+
+      - name: Test
+        run: go test -race -count=1 ./...
+
+      - name: Fuzz smoke
+        run: |
+          go test -fuzz=FuzzQuoteRoundTrip -fuzztime=15s ./dialect/
+          go test -fuzz=FuzzParseTag -fuzztime=15s .

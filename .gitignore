@@ -1,0 +1,6 @@
+coverage.out
+adhoctest/
+anima.test
+benchserver/benchserver
+.cortexkit/
+/notes
